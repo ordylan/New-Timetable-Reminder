@@ -1,0 +1,20 @@
+{
+  "name": "新课表",
+  "short_name": "课表",
+  "description": "新课表, 带铃声!",
+  "start_url": "index.html",
+    "display": "standalone",
+    "background_color": "#E6E6E6",
+    "theme_color": "#E6E6E6",
+  "icons": [
+    {
+      "src": "favicon.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    },{
+      "src": "favicon.ico",
+      "sizes": "128x128",
+      "type": "image/vnd.microsoft.icon"
+    }
+  ]
+}

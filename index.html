@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html>
+<head>
+<link rel="manifest" href="manifest.json">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="theme-color" content="#E6E6E6">
+<link rel="shortcut icon" href="favicon.ico" type="image/vnd.microsoft.icon">
+<link rel="icon" href="favicon.ico" type="image/vnd.microsoft.icon">
+<title>HSP表</title>
+    <style>
+    body {
+      font-family: Arial, sans-serif;background-color: #E6E6E6;color: #1A1A1A;
+    }
+    
+    h1 {
+      text-align: center;
+    }
+ p {     font-size: 36px;
+      text-align: center;
+    }   
+    table {
+      margin: 0 auto;
+      border-collapse: collapse;
+    }
+    
+    th, td {
+      padding: 10px;
+      text-align: center;
+      border: 1px solid #ccc;
+    }
+    
+    th {
+      background-color: #f2f2f2;
+    }
+    
+    #ke {
+      text-align: center;
+      font-weight: bold;
+      margin-top: 20px;
+    }       
+      #loading {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 1;
+            transition: opacity 1s;
+        }
+
+        #loading.fade-out {
+            opacity: 0;
+        }
+
+        #loading span {
+            font-size: 40px;
+            font-weight: bold;
+            color: #fff;text-align: center;
+        }
+  </style>
+  <script>
+  if ("serviceWorker" in navigator) {
+    navigator.serviceWorker.register("sw.js")
+      .then(function(registration) {
+        console.log("Service Worker");
+      })
+      .catch(function(error) {
+        console.log("Service Worker失败：" + error);
+      });
+  }
+</script>
+  <script>
+        window.onload = function() {
+            var loadingDiv = document.getElementById('loading');
+
+            setTimeout(function() {
+                loadingDiv.classList.add('fade-out');
+            }, 500);
+        }
+  localStorage.TEMP_LISTSUTUDYMUSIC="0";
+    function displaySchedule() {
+      const now = new Date();
+      const currentTime = now.getHours() * 100 + now.getMinutes();
+      var ringtone = "";
+     if (currentTime % 100 === 0 || currentTime % 100 === 30) {
+         if ( localStorage.TEMP_LISTSUTUDYMUSIC!=1&&localStorage.TEMP_LISTSUTUDYMUSIC!=2){
+        ringtone = "halftime.mp3";localStorage.TEMP_LISTSUTUDYMUSIC="1";
+         }
+      }
+     if (currentTime % 100 === 2 || currentTime % 100 === 32) {
+          localStorage.TEMP_LISTSUTUDYMUSIC="0";
+      }
+      const schedule = [
+        { startTime: 900, endTime: 1130, course: "物理" },
+        { startTime: 1300, endTime: 1530, course: "化学" },
+        { startTime: 1600, endTime: 1830, course: "数学" },
+        { startTime: 1930, endTime: 2200, course: "自定" }
+      ];
+
+      let currentCourse = "/";
+
+      for (const { startTime, endTime, course } of schedule) {
+        if (currentTime >= startTime && currentTime <= endTime) {
+          currentCourse = course;
+
+          if (currentTime === startTime || currentTime === endTime) {
+                    if (currentCourse != "/" &&localStorage.TEMP_LISTSUTUDYMUSIC!=2) {
+             localStorage.TEMP_LISTSUTUDYMUSIC="2";
+        ringtone = "class.wav";
+      }
+            
+          }
+          break;
+        }
+      }
+
+      document.getElementById("ke").innerHTML = `当前时间: ${now.toLocaleTimeString()} <br>当前课程: ${currentCourse}`;
+
+      if (ringtone) {
+        const audio = new Audio(ringtone);
+        audio.play();
+      }
+    }
+
+    setInterval(displaySchedule, 1000);
+  </script>
+</head>
+<body>  
+<p id="ke"></p>
+  <h1>课程表</h1><table>
+  <tr>
+    <th>时间</th>
+    <th>课程</th>
+  </tr>
+  <tr>
+    <td>09:00</td>
+    <td>/</td>
+  </tr>
+  <tr>
+    <td>09:00-11:30</td>
+    <td>课1-物理</td>
+  </tr>
+  <tr>
+    <td>11:30-13:00</td>
+    <td>/</td>
+  </tr>
+  <tr>
+    <td>13:00-15:30</td>
+    <td>课2-化学</td>
+  </tr>
+  <tr>
+    <td>15:30-16:00</td>
+    <td>/</td>
+  </tr>
+  <tr>
+    <td>16:00-18:30</td>
+    <td>课3-数学</td>
+  </tr>
+  <tr>
+    <td>18:30-19:30</td>
+    <td>/</td>
+  </tr>
+  <tr>
+    <td>19:30-22:00</td>
+    <td>课4-自定</td>
+  </tr>
+  <tr>
+    <td>22:00</td>
+    <td>/</td>
+  </tr>
+</table>
+
+     <div id="loading">
+        <span>ORDYLAN——课表系统<hr> 正在载入...</span>
+    </div>
+</body>
+</html>
