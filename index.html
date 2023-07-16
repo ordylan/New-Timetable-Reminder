@@ -73,6 +73,14 @@
       });
   }
 </script>
+</head>
+<body>  
+<p id="ke"></p>
+  <h1>课程表</h1>
+
+     <div id="loading">
+        <span>ORDYLAN——课表系统<hr> 正在载入...</span>
+    </div>
   <script>
         window.onload = function() {
             var loadingDiv = document.getElementById('loading');
@@ -82,6 +90,57 @@
             }, 500);
         }
   localStorage.TEMP_LISTSUTUDYMUSIC="0";
+
+      const schedule = [
+        { startTime: 900, endTime: 1130, course: "物理" },
+        { startTime: 1300, endTime: 1530, course: "化学" },
+        { startTime: 1600, endTime: 1830, course: "数学" },
+        { startTime: 1930, endTime: 2200, course: "自定" }
+      ];
+
+
+function addColon(time) {
+  let str = time.toString();
+  if (str.length >= 3) {
+    let prefix = str.slice(0, -2);
+    let suffix = str.slice(-2);
+    str = prefix + ':' + suffix;
+  }else{str="Err";}
+  return str;
+}
+
+function generateScheduleTable() {
+  const table = document.createElement("table");
+  const headerRow = document.createElement("tr");
+  const timeHeader = document.createElement("th");
+  const courseHeader = document.createElement("th");
+
+  timeHeader.textContent = "时间";
+  courseHeader.textContent = "课程";
+
+  headerRow.appendChild(timeHeader);
+  headerRow.appendChild(courseHeader);
+  table.appendChild(headerRow);
+
+  for (const { startTime, endTime, course } of schedule) {
+    const row = document.createElement("tr");
+    const timeCell = document.createElement("td");
+    const courseCell = document.createElement("td");
+
+    timeCell.textContent = addColon(startTime) + "-" + addColon(endTime);
+    courseCell.textContent = course;
+
+    row.appendChild(timeCell);
+    row.appendChild(courseCell);
+    table.appendChild(row);
+  }
+
+  //return table;
+document.body.appendChild(table);
+}
+
+generateScheduleTable();
+
     function displaySchedule() {
       const now = new Date();
       const currentTime = now.getHours() * 100 + now.getMinutes();
@@ -94,12 +153,7 @@
      if (currentTime % 100 === 2 || currentTime % 100 === 32) {
           localStorage.TEMP_LISTSUTUDYMUSIC="0";
       }
-      const schedule = [
-        { startTime: 900, endTime: 1130, course: "物理" },
-        { startTime: 1300, endTime: 1530, course: "化学" },
-        { startTime: 1600, endTime: 1830, course: "数学" },
-        { startTime: 1930, endTime: 2200, course: "自定" }
-      ];
+
 
       let currentCourse = "/";
 
@@ -127,55 +181,12 @@
     }
 
     setInterval(displaySchedule, 1000);
-  </script>
-</head>
-<body>  
-<p id="ke"></p>
-  <h1>课程表</h1><table>
-  <tr>
-    <th>时间</th>
-    <th>课程</th>
-  </tr>
-  <tr>
-    <td>09:00</td>
-    <td>/</td>
-  </tr>
-  <tr>
-    <td>09:00-11:30</td>
-    <td>课1-物理</td>
-  </tr>
-  <tr>
-    <td>11:30-13:00</td>
-    <td>/</td>
-  </tr>
-  <tr>
-    <td>13:00-15:30</td>
-    <td>课2-化学</td>
-  </tr>
-  <tr>
-    <td>15:30-16:00</td>
-    <td>/</td>
-  </tr>
-  <tr>
-    <td>16:00-18:30</td>
-    <td>课3-数学</td>
-  </tr>
-  <tr>
-    <td>18:30-19:30</td>
-    <td>/</td>
-  </tr>
-  <tr>
-    <td>19:30-22:00</td>
-    <td>课4-自定</td>
-  </tr>
-  <tr>
-    <td>22:00</td>
-    <td>/</td>
-  </tr>
-</table>
 
-     <div id="loading">
-        <span>ORDYLAN——课表系统<hr> 正在载入...</span>
-    </div>
+      //开启提示铃声
+     new Audio("class.wav").play().catch(error => {
+      alert("自动播放被浏览器阻止, 无法自动播放铃声!");
+    });
+
+  </script>
 </body>
 </html>
